@@ -7,11 +7,15 @@ public class CameraControls : MonoBehaviour {
     public float motionScale = 90f;
     public float maxAngleDown = 60f; //Difference of +15 from starting angle
     public float maxAngleUp = 20f; //Difference of -20 from starting angle
+    public float fpMaxAngle = 90f;
 
     private bool rotateDown = true;
     private bool rotateUp = true;
 
     public GameObject anchor;
+    public GameObject player;
+
+    public ThirdPersonController thirdPersonController;
 
     // Use this for initialization
     void Start ()
@@ -22,15 +26,12 @@ public class CameraControls : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        /**
-         * Fix up the code so that it will properly zoom in and out no matter the rotation
-         */
 
         float mouseScroll = Input.GetAxis("Mouse ScrollWheel");
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
-        Vector3 forward = transform.position;
+        Vector3 forward = transform.forward;
 
         if (mouseScroll < 0f)
         {
@@ -56,7 +57,7 @@ public class CameraControls : MonoBehaviour {
         }
 
         //Allows camera to rotate down
-        if (mouseY < 0)
+        if (mouseY < 0 && thirdPersonController.aimedIn == false)
         {
             if (rotateDown)
             {
@@ -72,9 +73,19 @@ public class CameraControls : MonoBehaviour {
                 rotateDown = true;
             }
         }
+        else if (mouseY < 0 && thirdPersonController.aimedIn == true)
+        {
+            transform.Rotate(transform.right, motionScale * Time.deltaTime, Space.World);
+
+            if (Vector3.Angle(player.transform.forward, transform.forward) > fpMaxAngle)
+            {
+                transform.forward = player.transform.forward;
+                transform.Rotate(transform.right, fpMaxAngle, Space.World);
+            }
+        }
 
         //Allows camera to rotate up
-        if (mouseY > 0)
+        if (mouseY > 0 && thirdPersonController.aimedIn == false)
         {
             if (rotateUp)
             {
@@ -88,6 +99,16 @@ public class CameraControls : MonoBehaviour {
             else
             {
                 rotateUp = true;
+            }
+        }
+        else if (mouseY > 0 && thirdPersonController.aimedIn == true)
+        {
+            transform.Rotate(-transform.right, motionScale * Time.deltaTime, Space.World);
+
+            if (Vector3.Angle(player.transform.forward, transform.forward) > fpMaxAngle)
+            {
+                transform.forward = player.transform.forward;
+                transform.Rotate(-transform.right, fpMaxAngle, Space.World);
             }
         }
     }

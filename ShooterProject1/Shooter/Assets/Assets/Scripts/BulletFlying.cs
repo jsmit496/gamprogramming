@@ -5,6 +5,10 @@ using UnityEngine;
 public class BulletFlying : MonoBehaviour
 {
 
+    public int score = 0;
+    public bool destroyBullet = false;
+    public bool hitTarget = false;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -16,4 +20,23 @@ public class BulletFlying : MonoBehaviour
     {
 
 	}
+
+    //*****************FIX SO THAT IT REGISTERS COLLISIONS*********************
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "target")
+        {
+            hitTarget = true;
+            destroyBullet = true;
+            GameObject.Destroy(other.gameObject);
+        }
+        else if (other.tag == "wall")
+        {
+            destroyBullet = true;
+        }
+        else if (other.tag == "floor")
+        {
+            destroyBullet = true;
+        }
+    }
 }

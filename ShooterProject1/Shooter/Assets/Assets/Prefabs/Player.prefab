@@ -197,8 +197,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
-  bulletSpeed: 4
+  bulletSpeed: 10
+  cameraMoveSpeed: 20
+  bulletNum: 0
   waitShootTime: 2
+  aimedIn: 0
   playerCamera: {fileID: 0}
   bullet: {fileID: 1006008750180252, guid: aaafa00a622f614498bdddcb07d7c1d4, type: 2}
   dummyBullet:
