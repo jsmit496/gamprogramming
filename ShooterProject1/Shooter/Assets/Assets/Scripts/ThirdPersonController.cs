@@ -19,7 +19,7 @@ public class ThirdPersonController : MonoBehaviour
     public float waitShootTime = 3;
     public bool aimedIn = false;
     public int score;
-    public int maxScore = 5;
+    public int scoreToWin = 10;
 
     Vector3 thirdPersonCameraPosition;
     Vector3 firstPersonCameraPosition;
@@ -42,6 +42,10 @@ public class ThirdPersonController : MonoBehaviour
         waitShoot = waitShootTime;
 
         aimCursor.SetActive(false);
+
+        Cursor.visible = false;
+        CursorLockMode lockCursor = CursorLockMode.Locked;
+        Cursor.lockState = lockCursor;
     }
 	
 	// Update is called once per frame
@@ -216,6 +220,21 @@ public class ThirdPersonController : MonoBehaviour
                 bulletDestroyed = true;
                 waitShoot = waitShootTime;
             }
+        }
+
+        //When the player gets so many points the end goal opens up
+        if (score >= scoreToWin)
+        {
+            GameObject.Destroy(endGoal);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Collectable")
+        {
+            GameObject.Destroy(other.gameObject);
+            Application.Quit();
         }
     }
 }

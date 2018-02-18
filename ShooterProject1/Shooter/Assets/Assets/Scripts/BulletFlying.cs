@@ -21,7 +21,6 @@ public class BulletFlying : MonoBehaviour
 
 	}
 
-    //*****************FIX SO THAT IT REGISTERS COLLISIONS*********************
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "target")
@@ -30,7 +29,7 @@ public class BulletFlying : MonoBehaviour
             destroyBullet = true;
             GameObject.Destroy(other.gameObject);
         }
-        else if (other.tag == "wall")
+        else if (other.tag == "SolidWall")
         {
             destroyBullet = true;
         }
