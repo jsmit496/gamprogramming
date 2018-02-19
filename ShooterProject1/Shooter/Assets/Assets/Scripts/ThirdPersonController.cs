@@ -99,6 +99,16 @@ public class ThirdPersonController : MonoBehaviour
             transform.right = cameraLeft;
             moveDirection += -playerCamera.transform.right;
         }
+        else if (aimedIn == true)
+        {
+            Vector3 moveLeft = playerCamera.transform.forward;
+            moveLeft.y = 0;
+            transform.forward = moveLeft;
+            if (Input.GetKey(KeyCode.A))
+            {
+                moveDirection -= playerCamera.transform.right;
+            }
+        }
 
         if (Input.GetKey(KeyCode.D) && aimedIn == false)
         {
@@ -107,6 +117,17 @@ public class ThirdPersonController : MonoBehaviour
             transform.right = cameraRight;
             moveDirection += playerCamera.transform.right;
         }
+        else if (aimedIn == true)
+        {
+            Vector3 moveRight = playerCamera.transform.forward;
+            moveRight.y = 0;
+            transform.forward = moveRight;
+            if (Input.GetKey(KeyCode.D))
+            {
+                moveDirection += playerCamera.transform.right;
+            }
+        }
+
 
         transformAnchor.x = transform.position.x;
         transformAnchor.z = transform.position.z;
