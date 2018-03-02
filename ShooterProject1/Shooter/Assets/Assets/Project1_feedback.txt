@@ -1,0 +1,26 @@
+Base feature score: 85/100
+Innovation bonus: 6
+Bug penalty: -3
+Overall grade: 88/100
+
+Features successfully implemented:
+- First person control
+- Projectiles fire when left mouse is clicked
+- Ramp walking and falling
+- Targets destroyed when hit
+- Level walls
+
+Features not demonstrated
+- Level completion
+- Final pickup item appears and works correctly
+
+Innovations:
+- Reload control
+- Moving targets
+- Camera perspective load-in
+
+Issues:
+Final pickup item doesn't disable player control or end the level.
+Also, when the wall is removed, there is no backup wall to prevent the player
+from walking off the edge of the map and falling indefinitely.
+Also, bullets are not destroyed on contact with solid objects.
