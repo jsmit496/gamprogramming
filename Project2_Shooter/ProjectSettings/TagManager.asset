@@ -9,6 +9,8 @@ TagManager:
   - WayPoint
   - Collectable
   - EndFence
+  - Waypoint
+  - Enemy
   layers:
   - Default
   - TransparentFX
