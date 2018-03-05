@@ -31,43 +31,19 @@ public class BulletFlying : MonoBehaviour
             hitTarget = true;
             destroyBullet = true;
             GameObject.Destroy(other.gameObject);
-            if (isEnemyBullet == true)
-            {
-                enemyShoot.enemyBulletDirectionSet = false;
-                enemyShoot.enemyBullet.SetActive(false);
-                GameObject.Destroy(enemyShoot.dummyEnemyBullet[0]);
-
-            }
         }
         else if (other.tag == "SolidWall")
         {
             destroyBullet = true;
-            if (isEnemyBullet == true)
-            {
-                enemyShoot.enemyBulletDirectionSet = false;
-                enemyShoot.enemyBullet.SetActive(false);
-                GameObject.Destroy(enemyShoot.dummyEnemyBullet[0]);
-            }
         }
         else if (other.tag == "floor")
         {
             destroyBullet = true;
-            if (isEnemyBullet == true)
-            {
-                enemyShoot.enemyBulletDirectionSet = false;
-                enemyShoot.enemyBullet.SetActive(false);
-                GameObject.Destroy(enemyShoot.dummyEnemyBullet[0]);
-            }
         }
         if (other.tag == "Player")
         {
             //Change player HP to decrease by 20(default)
-            if (isEnemyBullet == true)
-            {
-                enemyShoot.enemyBulletDirectionSet = false;
-                enemyShoot.enemyBullet.SetActive(false);
-                GameObject.Destroy(enemyShoot.dummyEnemyBullet[0]);
-            }
+
         }
         else if (other.tag == "enemy")
         {

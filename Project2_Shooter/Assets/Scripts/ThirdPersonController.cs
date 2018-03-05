@@ -31,8 +31,13 @@ public class ThirdPersonController : MonoBehaviour
     public GameObject endGoal;
     public Transform anchor;
 
-	// Use this for initialization
-	void Start ()
+    public bool isCharacterMoving;
+    public bool isCharacterAiming;
+
+    private Animator animator;
+
+    // Use this for initialization
+    void Start()
     {
         for (int i = 0; i < 6; i++)
         {
@@ -46,10 +51,12 @@ public class ThirdPersonController : MonoBehaviour
         Cursor.visible = false;
         CursorLockMode lockCursor = CursorLockMode.Locked;
         Cursor.lockState = lockCursor;
+
+        animator = GetComponent<Animator>();
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
         //Player movement
         Vector3 moveDirection = Vector3.zero;
@@ -62,6 +69,7 @@ public class ThirdPersonController : MonoBehaviour
             cameraForward.y = 0;
             transform.forward = cameraForward;
             moveDirection += cameraForward;
+            isCharacterMoving = true;
         }
         else if (aimedIn == true)
         {
@@ -128,13 +136,32 @@ public class ThirdPersonController : MonoBehaviour
             }
         }
 
-
         transformAnchor.x = transform.position.x;
         transformAnchor.z = transform.position.z;
-        transformAnchor.y = transform.position.y + 0.75f;
+        transformAnchor.y = transform.position.y + 2f;
         anchor.position = transformAnchor;
         transform.position += moveDirection * Time.deltaTime * speed;
 
+        //Change Animations
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        {
+            isCharacterMoving = true;
+        }
+        else
+        {
+            isCharacterMoving = false;
+        }
+
+        if (aimedIn == true)
+        {
+            isCharacterAiming = true;
+        }
+        else if (aimedIn == false)
+        {
+            isCharacterAiming = false;
+        }
+        animator.SetBool("isMoving", isCharacterMoving);
+        animator.SetBool("isAiming", isCharacterAiming);
 
         //aim in to first person camera view (more accuracy)
         if (Input.GetMouseButtonDown(1) && aimedIn == false)
