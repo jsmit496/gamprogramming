@@ -12,8 +12,10 @@ public class BulletFlying : MonoBehaviour
 
     public EnemyShoot enemyShoot;
 
-	// Use this for initialization
-	void Start ()
+    public AudioSource hitAudioSource;
+
+    // Use this for initialization
+    void Start ()
     {
 		
 	}
@@ -72,6 +74,7 @@ public class BulletFlying : MonoBehaviour
         if (collision.collider.tag == "Player")
         {
             //Change player HP to decrease by 20(default)
+            hitAudioSource.Play();
             if (isEnemyBullet)
             {
                 enemyShoot.enemyBulletDirectionSet = false;
@@ -83,6 +86,7 @@ public class BulletFlying : MonoBehaviour
         else if (collision.collider.tag == "Enemy")
         {
             //Change enemy HP to decrease by 20(default)
+            hitAudioSource.Play();
             collision.collider.GetComponent<EnemyShoot>().health -= 100;
             destroyBullet = true;
             

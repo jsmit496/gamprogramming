@@ -14,7 +14,6 @@ using UnityEngine;
      * Enemy doesn't just stop to shoot the player
      * Enemy does not turn
      * Weapons do not change positions properly
-     * Having a certain amount of waypoints make the Enemy confused on the path it should take (unknown for why it does this)
      * Need a death animation
      * Camera starts scrolled in
      * Animations dont seem to flow very well
@@ -51,10 +50,12 @@ public class ThirdPersonController : MonoBehaviour
     public Transform anchor;
     public Transform aimPosition;
 
-    public bool isCharacterMoving;
-    public bool isCharacterAiming;
+    public bool isCharacterMoving = false;
+    public bool isCharacterAiming = false;
+    public bool isCharacterDead = false;
 
     private Animator animator;
+    public AudioSource shootAudioSource;
 
     // Use this for initialization
     void Start()
@@ -78,215 +79,219 @@ public class ThirdPersonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Player movement
-        Vector3 moveDirection = Vector3.zero;
-        Vector3 bulletMoveDirection = Vector3.zero;
-        Vector3 transformAnchor = anchor.position;
+        if (isCharacterDead == false)
+        {
+            //Player movement
+            Vector3 moveDirection = Vector3.zero;
+            Vector3 bulletMoveDirection = Vector3.zero;
+            Vector3 transformAnchor = anchor.position;
 
-        if (Input.GetKey(KeyCode.W) && aimedIn == false)
-        {
-            Vector3 cameraForward = playerCamera.transform.forward;
-            cameraForward.y = 0;
-            transform.forward = cameraForward;
-            moveDirection += cameraForward;
-            isCharacterMoving = true;
-        }
-        else if (aimedIn == true)
-        {
-            Vector3 cameraForward = playerCamera.transform.forward;
-            cameraForward.y = 0;
-            transform.forward = cameraForward;
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetKey(KeyCode.W) && aimedIn == false)
             {
+                Vector3 cameraForward = playerCamera.transform.forward;
+                cameraForward.y = 0;
+                transform.forward = cameraForward;
                 moveDirection += cameraForward;
+                isCharacterMoving = true;
             }
-        }
-
-        if (Input.GetKey(KeyCode.S) && aimedIn == false)
-        {
-            Vector3 cameraBackward = -playerCamera.transform.forward;
-            cameraBackward.y = 0;
-            transform.forward = cameraBackward;
-            moveDirection += cameraBackward;
-        }
-        else if (aimedIn == true)
-        {
-            Vector3 cameraBackward = playerCamera.transform.forward;
-            cameraBackward.y = 0;
-            transform.forward = cameraBackward;
-            if (Input.GetKey(KeyCode.S))
+            else if (aimedIn == true)
             {
-                moveDirection -= playerCamera.transform.forward;
+                Vector3 cameraForward = playerCamera.transform.forward;
+                cameraForward.y = 0;
+                transform.forward = cameraForward;
+                if (Input.GetKey(KeyCode.W))
+                {
+                    moveDirection += cameraForward;
+                }
             }
-        }
 
-        if (Input.GetKey(KeyCode.A) && aimedIn == false)
-        {
-            Vector3 cameraLeft = playerCamera.transform.forward;
-            cameraLeft.y = 0;
-            transform.right = cameraLeft;
-            moveDirection += -playerCamera.transform.right;
-        }
-        else if (aimedIn == true)
-        {
-            Vector3 moveLeft = playerCamera.transform.forward;
-            moveLeft.y = 0;
-            transform.forward = moveLeft;
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.S) && aimedIn == false)
             {
-                moveDirection -= playerCamera.transform.right;
+                Vector3 cameraBackward = -playerCamera.transform.forward;
+                cameraBackward.y = 0;
+                transform.forward = cameraBackward;
+                moveDirection += cameraBackward;
             }
-        }
-
-        if (Input.GetKey(KeyCode.D) && aimedIn == false)
-        {
-            Vector3 cameraRight = -playerCamera.transform.forward;
-            cameraRight.y = 0;
-            transform.right = cameraRight;
-            moveDirection += playerCamera.transform.right;
-        }
-        else if (aimedIn == true)
-        {
-            Vector3 moveRight = playerCamera.transform.forward;
-            moveRight.y = 0;
-            transform.forward = moveRight;
-            if (Input.GetKey(KeyCode.D))
+            else if (aimedIn == true)
             {
+                Vector3 cameraBackward = playerCamera.transform.forward;
+                cameraBackward.y = 0;
+                transform.forward = cameraBackward;
+                if (Input.GetKey(KeyCode.S))
+                {
+                    moveDirection -= playerCamera.transform.forward;
+                }
+            }
+
+            if (Input.GetKey(KeyCode.A) && aimedIn == false)
+            {
+                Vector3 cameraLeft = playerCamera.transform.forward;
+                cameraLeft.y = 0;
+                transform.right = cameraLeft;
+                moveDirection += -playerCamera.transform.right;
+            }
+            else if (aimedIn == true)
+            {
+                Vector3 moveLeft = playerCamera.transform.forward;
+                moveLeft.y = 0;
+                transform.forward = moveLeft;
+                if (Input.GetKey(KeyCode.A))
+                {
+                    moveDirection -= playerCamera.transform.right;
+                }
+            }
+
+            if (Input.GetKey(KeyCode.D) && aimedIn == false)
+            {
+                Vector3 cameraRight = -playerCamera.transform.forward;
+                cameraRight.y = 0;
+                transform.right = cameraRight;
                 moveDirection += playerCamera.transform.right;
             }
-        }
-
-        transformAnchor.x = transform.position.x;
-        transformAnchor.z = transform.position.z;
-        transformAnchor.y = transform.position.y + 2f;
-        anchor.position = transformAnchor;
-        transform.position += moveDirection * Time.deltaTime * speed;
-
-        //Change Animations
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
-        {
-            isCharacterMoving = true;
-        }
-        else
-        {
-            isCharacterMoving = false;
-        }
-
-        if (aimedIn == true)
-        {
-            isCharacterAiming = true;
-        }
-        else if (aimedIn == false)
-        {
-            isCharacterAiming = false;
-        }
-        animator.SetBool("isMoving", isCharacterMoving);
-        animator.SetBool("isAiming", isCharacterAiming);
-
-        //aim in to first person camera view (more accuracy)
-        if (Input.GetMouseButtonDown(1) && aimedIn == false)
-        {
-            aimedIn = true;
-            firstPersonCameraPosition = aimPosition.forward;
-            firstPersonCameraPosition.z = 0;
-        }
-        else if (Input.GetMouseButtonDown(1) && aimedIn == true)
-        {
-            aimedIn = false;
-            thirdPersonCameraPosition = aimPosition.forward;
-            thirdPersonCameraPosition.x -= 20;
-            thirdPersonCameraPosition.y += 18;
-        }
-        if (aimedIn == true)
-        {
-            playerCamera.transform.localPosition = Vector3.MoveTowards(playerCamera.transform.localPosition, firstPersonCameraPosition, cameraMoveSpeed * Time.deltaTime);
-            aimCursor.SetActive(true);
-        }
-        else if (aimedIn == false)
-        {
-            playerCamera.transform.localPosition = Vector3.MoveTowards(playerCamera.transform.localPosition, thirdPersonCameraPosition, cameraMoveSpeed * Time.deltaTime);
-            aimCursor.SetActive(false);
-        }
-
-        //Reloading the bullets
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            if (bulletNum == 0)
+            else if (aimedIn == true)
             {
-                for (int i = bulletNum; i < 6; i++)
+                Vector3 moveRight = playerCamera.transform.forward;
+                moveRight.y = 0;
+                transform.forward = moveRight;
+                if (Input.GetKey(KeyCode.D))
                 {
-                    dummyBullet[i] = GameObject.Instantiate(bullet);
-                    dummyBullet[i].SetActive(false);
+                    moveDirection += playerCamera.transform.right;
                 }
+            }
+
+            transformAnchor.x = transform.position.x;
+            transformAnchor.z = transform.position.z;
+            transformAnchor.y = transform.position.y + 2f;
+            anchor.position = transformAnchor;
+            transform.position += moveDirection * Time.deltaTime * speed;
+
+            //Change Animations
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+            {
+                isCharacterMoving = true;
             }
             else
             {
-                bulletNum--;
-                for (int i = bulletNum; i >= 0; i--)
+                isCharacterMoving = false;
+            }
+
+            if (aimedIn == true)
+            {
+                isCharacterAiming = true;
+            }
+            else if (aimedIn == false)
+            {
+                isCharacterAiming = false;
+            }
+            animator.SetBool("isMoving", isCharacterMoving);
+            animator.SetBool("isAiming", isCharacterAiming);
+
+            //aim in to first person camera view (more accuracy)
+            if (Input.GetMouseButtonDown(1) && aimedIn == false)
+            {
+                aimedIn = true;
+                firstPersonCameraPosition = aimPosition.forward;
+                firstPersonCameraPosition.z = 0;
+            }
+            else if (Input.GetMouseButtonDown(1) && aimedIn == true)
+            {
+                aimedIn = false;
+                thirdPersonCameraPosition = aimPosition.forward;
+                thirdPersonCameraPosition.x -= 20;
+                thirdPersonCameraPosition.y += 18;
+            }
+            if (aimedIn == true)
+            {
+                playerCamera.transform.localPosition = Vector3.MoveTowards(playerCamera.transform.localPosition, firstPersonCameraPosition, cameraMoveSpeed * Time.deltaTime);
+                aimCursor.SetActive(true);
+            }
+            else if (aimedIn == false)
+            {
+                playerCamera.transform.localPosition = Vector3.MoveTowards(playerCamera.transform.localPosition, thirdPersonCameraPosition, cameraMoveSpeed * Time.deltaTime);
+                aimCursor.SetActive(false);
+            }
+
+            //Reloading the bullets
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (bulletNum == 0)
                 {
-                    dummyBullet[i] = GameObject.Instantiate(bullet);
-                    dummyBullet[i].SetActive(false);
-                }
-                bulletNum = 0;
-            }
-            ammoEmpty = false;
-        }
-
-        //Shooting of the bullet
-        if (Input.GetMouseButtonDown(0) && bulletDestroyed == true && ammoEmpty == false && waitShoot == waitShootTime)
-        {
-            if (aimedIn == false)
-            {
-                dummyBullet[bulletNum].transform.position = aimPosition.position;
-            }
-            else if (aimedIn == true)
-            {
-                dummyBullet[bulletNum].transform.position = aimPosition.position;
-            }
-            dummyBullet[bulletNum].SetActive(true);
-            bulletDestroyed = false;
-        }
-
-        if (bulletDestroyed == false && waitShoot > 0)
-        {
-            if (aimedIn == false)
-            {
-                Vector3 bulletFly = transform.forward;
-                bulletFly.y = 0f;
-                dummyBullet[bulletNum].transform.forward = bulletFly;
-                bulletMoveDirection += bulletFly;
-            }
-            else if (aimedIn == true)
-            {
-                Vector3 bulletFly = playerCamera.transform.forward;
-                dummyBullet[bulletNum].transform.forward = bulletFly;
-                bulletMoveDirection += bulletFly;
-            }
-            dummyBullet[bulletNum].transform.position += bulletMoveDirection * Time.deltaTime * bulletSpeed;
-
-            if (waitShoot >= 0)
-            {
-                waitShoot -= 2 * Time.deltaTime;
-            }
-
-            if (waitShoot <= 0 || dummyBullet[bulletNum].GetComponent<BulletFlying>().destroyBullet == true)
-            {
-                if (dummyBullet[bulletNum].GetComponent<BulletFlying>().hitTarget == true)
-                {
-                    score += 1;
-                }
-                GameObject.Destroy(dummyBullet[bulletNum]);
-                if (bulletNum < 5)
-                {
-                    bulletNum++;
+                    for (int i = bulletNum; i < 6; i++)
+                    {
+                        dummyBullet[i] = GameObject.Instantiate(bullet);
+                        dummyBullet[i].SetActive(false);
+                    }
                 }
                 else
                 {
-                    ammoEmpty = true;
+                    bulletNum--;
+                    for (int i = bulletNum; i >= 0; i--)
+                    {
+                        dummyBullet[i] = GameObject.Instantiate(bullet);
+                        dummyBullet[i].SetActive(false);
+                    }
                     bulletNum = 0;
                 }
-                bulletDestroyed = true;
-                waitShoot = waitShootTime;
+                ammoEmpty = false;
+            }
+
+            //Shooting of the bullet
+            if (Input.GetMouseButtonDown(0) && bulletDestroyed == true && ammoEmpty == false && waitShoot == waitShootTime)
+            {
+                if (aimedIn == false)
+                {
+                    dummyBullet[bulletNum].transform.position = aimPosition.position;
+                }
+                else if (aimedIn == true)
+                {
+                    dummyBullet[bulletNum].transform.position = aimPosition.position;
+                }
+                shootAudioSource.Play();
+                dummyBullet[bulletNum].SetActive(true);
+                bulletDestroyed = false;
+            }
+
+            if (bulletDestroyed == false && waitShoot > 0)
+            {
+                if (aimedIn == false)
+                {
+                    Vector3 bulletFly = transform.forward;
+                    bulletFly.y = 0f;
+                    dummyBullet[bulletNum].transform.forward = bulletFly;
+                    bulletMoveDirection += bulletFly;
+                }
+                else if (aimedIn == true)
+                {
+                    Vector3 bulletFly = playerCamera.transform.forward;
+                    dummyBullet[bulletNum].transform.forward = bulletFly;
+                    bulletMoveDirection += bulletFly;
+                }
+                dummyBullet[bulletNum].transform.position += bulletMoveDirection * Time.deltaTime * bulletSpeed;
+
+                if (waitShoot >= 0)
+                {
+                    waitShoot -= 2 * Time.deltaTime;
+                }
+
+                if (waitShoot <= 0 || dummyBullet[bulletNum].GetComponent<BulletFlying>().destroyBullet == true)
+                {
+                    if (dummyBullet[bulletNum].GetComponent<BulletFlying>().hitTarget == true)
+                    {
+                        score += 1;
+                    }
+                    GameObject.Destroy(dummyBullet[bulletNum]);
+                    if (bulletNum < 5)
+                    {
+                        bulletNum++;
+                    }
+                    else
+                    {
+                        ammoEmpty = true;
+                        bulletNum = 0;
+                    }
+                    bulletDestroyed = true;
+                    waitShoot = waitShootTime;
+                }
             }
         }
 
@@ -295,6 +300,21 @@ public class ThirdPersonController : MonoBehaviour
         {
             GameObject.Destroy(endGoal);
         }
+
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            health = 100;
+        }
+
+        if (health <= 0)
+        {
+            isCharacterDead = true;
+        }
+        else if (health > 0)
+        {
+            isCharacterDead = false;
+        }
+        animator.SetBool("isDead", isCharacterDead);
     }
 
     private void OnTriggerEnter(Collider other)

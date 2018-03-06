@@ -25,23 +25,31 @@ public class EnemyControlMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GetComponent<EnemyShoot>().canSeePlayer == true)
+        if (GetComponent<EnemyShoot>().isCharacterDead == false)
         {
-            //transform.position = Vector3.MoveTowards(transform.position, playerToFollow.transform.position, speed * Time.deltaTime);
-            isCharacterAiming = true;
-            isCharacterMoving = false;
-            weapon.transform.position = aimPosition.position;
-            weapon.transform.rotation = new Quaternion(0, 0, 180, 0);
+            if (GetComponent<EnemyShoot>().canSeePlayer == true)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, playerToFollow.transform.position, speed * Time.deltaTime);
+                isCharacterAiming = true;
+                isCharacterMoving = false;
+                Vector3 targetDir = playerToFollow.transform.position - transform.position;
+                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, speed * Time.deltaTime, 0.0f);
+                Debug.DrawRay(transform.position, newDir, Color.red);
+                transform.rotation = Quaternion.LookRotation(newDir);
+            }
+            if (GetComponent<EnemyShoot>().canSeePlayer == false)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, pathTarget[currPathTarget].transform.position, speed * Time.deltaTime);
+                isCharacterMoving = true;
+                isCharacterAiming = false;
+                Vector3 targetDir = pathTarget[currPathTarget].transform.position - transform.position;
+                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, speed * Time.deltaTime, 0.0f);
+                Debug.DrawRay(transform.position, newDir, Color.red);
+                transform.rotation = Quaternion.LookRotation(newDir);
+            }
+            animator.SetBool("isMoving", isCharacterMoving);
+            animator.SetBool("isAiming", isCharacterAiming);
         }
-        if (GetComponent<EnemyShoot>().canSeePlayer == false)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, pathTarget[currPathTarget].transform.position, speed * Time.deltaTime);
-            isCharacterMoving = true;
-            isCharacterAiming = false;
-            weapon.transform.rotation = new Quaternion(0, 0, 0, 0);
-        }
-        animator.SetBool("isMoving", isCharacterMoving);
-        animator.SetBool("isAiming", isCharacterAiming);
     }
     private void OnTriggerEnter(Collider other)
     {

@@ -18,6 +18,7 @@ public class EnemyShoot : MonoBehaviour
     private float waitShootTime;
     private bool waitToShoot = false;
     private bool bulletDestroyed = false;
+    public bool isCharacterDead = false;
 
     Vector3 rayLeft;
     Vector3 rayRight;
@@ -29,6 +30,8 @@ public class EnemyShoot : MonoBehaviour
     public GameObject rayLeftPosition;
     public GameObject rayRightPosition;
 
+    private Animator animator;
+
     // Use this for initialization
     void Start ()
     {
@@ -36,6 +39,7 @@ public class EnemyShoot : MonoBehaviour
         rayRight = rayRightPosition.transform.position;
         rayLeft = rayLeftPosition.transform.position;
         waitShootTime = timeToWaitToShoot;
+        animator = GetComponent<Animator>();
     }
 	
 	// Update is called once per frame
@@ -43,62 +47,74 @@ public class EnemyShoot : MonoBehaviour
     {
         rayRight = rayRightPosition.transform.position;
         rayLeft = rayLeftPosition.transform.position;
-
-        RaycastHit hitInfo;
-        if (Physics.Raycast(rayLeft, transform.forward, out hitInfo, rayDistance, shootTarget.value) && inSight == false)
+        if (isCharacterDead == false)
         {
-            transform.Rotate(Vector3.down, rotationSpeed * Time.deltaTime, Space.World);
-            canSeePlayer = true;
-        }
-        if (Physics.Raycast(rayRight, transform.forward, out hitInfo, rayDistance, shootTarget.value) && inSight == false)
-        {
-            transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.World);
-            canSeePlayer = true;
-        }
-        if (Physics.Raycast(transform.position, transform.forward, out hitInfo, rayDistance, shootTarget.value))
-        {
-            inSight = true;
-            canSeePlayer = true;
-        }
-        else
-        {
-            inSight = false;
-            canSeePlayer = false;
-        }
-
-        if (inSight == true && waitShootTime > 0 && bulletDestroyed == false)
-        {
-            if (enemyBulletDirectionSet == false && waitToShoot == false)
+            RaycastHit hitInfo;
+            if (Physics.Raycast(rayLeft, transform.forward, out hitInfo, rayDistance, shootTarget.value) && inSight == false)
             {
-                dummyEnemyBullet[0].transform.position = shootPosition.position;
-                dummyEnemyBullet[0].SetActive(true);
-                Vector3 bulletFly = transform.forward;
-                dummyEnemyBullet[0].transform.forward = bulletFly;
-                bulletMoveDirection += bulletFly;
-                enemyBulletDirectionSet = true;
-                waitToShoot = true;
+                transform.Rotate(Vector3.down, rotationSpeed * Time.deltaTime, Space.World);
+                canSeePlayer = true;
             }
-            dummyEnemyBullet[0].transform.position += bulletMoveDirection * Time.deltaTime * bulletSpeed;
-        }
-
-        //Timer for AI to wait before shooting again
-        if (waitToShoot == true)
-        {
-            waitShootTime -= Time.deltaTime;
-            if (waitShootTime <= 0)
+            if (Physics.Raycast(rayRight, transform.forward, out hitInfo, rayDistance, shootTarget.value) && inSight == false)
             {
-                waitToShoot = false;
-                waitShootTime = timeToWaitToShoot;
-                dummyEnemyBullet[0] = GameObject.Instantiate(enemyBullet);
-                bulletDestroyed = false;
+                transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.World);
+                canSeePlayer = true;
+            }
+            if (Physics.Raycast(transform.position, transform.forward, out hitInfo, rayDistance, shootTarget.value))
+            {
+                inSight = true;
+                canSeePlayer = true;
+            }
+            else
+            {
+                inSight = false;
+                canSeePlayer = false;
+            }
+
+            if (inSight == true && waitShootTime > 0 && bulletDestroyed == false)
+            {
+                if (enemyBulletDirectionSet == false && waitToShoot == false)
+                {
+                    dummyEnemyBullet[0].transform.position = shootPosition.position;
+                    dummyEnemyBullet[0].SetActive(true);
+                    Vector3 bulletFly = transform.forward;
+                    dummyEnemyBullet[0].transform.forward = bulletFly;
+                    bulletMoveDirection += bulletFly;
+                    enemyBulletDirectionSet = true;
+                    waitToShoot = true;
+                }
+                dummyEnemyBullet[0].transform.position += bulletMoveDirection * Time.deltaTime * bulletSpeed;
+            }
+
+            //Timer for AI to wait before shooting again
+            if (waitToShoot == true)
+            {
+                waitShootTime -= Time.deltaTime;
+                if (waitShootTime <= 0)
+                {
+                    waitToShoot = false;
+                    waitShootTime = timeToWaitToShoot;
+                    dummyEnemyBullet[0] = GameObject.Instantiate(enemyBullet);
+                    bulletDestroyed = false;
+                }
+            }
+
+            if (bulletDestroyed == false && dummyEnemyBullet[0].GetComponent<BulletFlying>().destroyBullet == true)
+            {
+                GameObject.Destroy(dummyEnemyBullet[0]);
+                bulletDestroyed = true;
             }
         }
 
-        if (bulletDestroyed == false && dummyEnemyBullet[0].GetComponent<BulletFlying>().destroyBullet == true)
+        if (health <= 0)
         {
-            GameObject.Destroy(dummyEnemyBullet[0]);
-            bulletDestroyed = true;
+            isCharacterDead = true;
         }
+        else if (health > 0)
+        {
+            isCharacterDead = false;
+        }
+        animator.SetBool("isDead", isCharacterDead);
     }
 
     private void OnDrawGizmos()
