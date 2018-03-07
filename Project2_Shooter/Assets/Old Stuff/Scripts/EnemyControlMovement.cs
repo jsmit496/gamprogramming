@@ -8,6 +8,7 @@ public class EnemyControlMovement : MonoBehaviour
     public int currPathTarget = 0;
     public bool isCharacterMoving;
     public bool isCharacterAiming;
+    private float strength = 0.5f;
 
     public GameObject[] pathTarget;
     public GameObject playerToFollow;
@@ -32,20 +33,18 @@ public class EnemyControlMovement : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, playerToFollow.transform.position, speed * Time.deltaTime);
                 isCharacterAiming = true;
                 isCharacterMoving = false;
-                Vector3 targetDir = playerToFollow.transform.position - transform.position;
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, speed * Time.deltaTime, 0.0f);
-                Debug.DrawRay(transform.position, newDir, Color.red);
-                transform.rotation = Quaternion.LookRotation(newDir);
+                Quaternion targetRotation = Quaternion.LookRotation(playerToFollow.transform.position - transform.position);
+                float str = Mathf.Min(Time.deltaTime);
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, str);
             }
             if (GetComponent<EnemyShoot>().canSeePlayer == false)
             {
                 transform.position = Vector3.MoveTowards(transform.position, pathTarget[currPathTarget].transform.position, speed * Time.deltaTime);
                 isCharacterMoving = true;
                 isCharacterAiming = false;
-                Vector3 targetDir = pathTarget[currPathTarget].transform.position - transform.position;
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, speed * Time.deltaTime, 0.0f);
-                Debug.DrawRay(transform.position, newDir, Color.red);
-                transform.rotation = Quaternion.LookRotation(newDir);
+                Quaternion targetRotation = Quaternion.LookRotation(pathTarget[currPathTarget].transform.position - transform.position);
+                float str = Mathf.Min(Time.deltaTime);
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, str);
             }
             animator.SetBool("isMoving", isCharacterMoving);
             animator.SetBool("isAiming", isCharacterAiming);

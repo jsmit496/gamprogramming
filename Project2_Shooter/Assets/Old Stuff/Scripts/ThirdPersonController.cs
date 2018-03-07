@@ -309,12 +309,20 @@ public class ThirdPersonController : MonoBehaviour
         if (health <= 0)
         {
             isCharacterDead = true;
+            FindObjectOfType<ThirdPersonController>().score += 1;
         }
         else if (health > 0)
         {
             isCharacterDead = false;
         }
         animator.SetBool("isDead", isCharacterDead);
+
+        //reset player to alive
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            health = 100;
+            isCharacterDead = false;
+        }
     }
 
     private void OnTriggerEnter(Collider other)

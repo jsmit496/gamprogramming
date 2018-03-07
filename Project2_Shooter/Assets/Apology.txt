@@ -1,0 +1,4 @@
+Sorry, just a heads up I didn't get to finish tweeking everything so it doesn't function very well.
+
+Note: I plan on rewriting this project over spring break so I'll be saving it as project2Remake.
+Project2_Shooter is the one I will be submitting on the due date.
