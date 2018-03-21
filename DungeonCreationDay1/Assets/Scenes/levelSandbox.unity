@@ -140,6 +140,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfc1454c42051084d8599df602e8def7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  width: 20
+  height: 20
+  numPartitions: 2
+  randomSize: 0
   groundDefault: {fileID: 1357934394474358, guid: dc2c17ca168db144bacf4d5b1e4fd8ab,
     type: 2}
   wallDefault: {fileID: 1877599984782574, guid: 8ccd57b678f52464b964c71346078be8,
@@ -296,10 +300,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1747672062}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.38268322, y: -0, z: -0, w: 0.9238797}
+  m_LocalPosition: {x: 12, y: 10, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45.000004, y: 0, z: 0}
