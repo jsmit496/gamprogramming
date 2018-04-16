@@ -7,11 +7,18 @@ public class TreeRectDebug : MonoBehaviour
 {
     public int levelWidth = 20;
     public int levelHeight = 20;
-    public int numPartitions = 1;
+    public int depth = 2;
+    public float numPartitions = 2;
+    private int numRooms;
+    private int count = 1;
+    private int splitWidth = 20;
+    private int splitHeight = 20;
 	// Use this for initialization
 	void Start ()
     {
-        RectInt[] partitions = new RectInt[4];
+        numRooms = (int)Mathf.Pow(2, numPartitions);
+
+        RectInt[] partitions = new RectInt[numRooms];
         BinaryTree<RectInt> sampleRectTree = new BinaryTree<RectInt>(new RectInt(0, 0, levelWidth, levelHeight));
 
         int partitionWidth = levelWidth;
@@ -20,11 +27,11 @@ public class TreeRectDebug : MonoBehaviour
         {
             if (i % 2 == 0)
             {
-                partitionHeight = partitionHeight / 2;
+                partitionHeight = partitionHeight / numRooms;
             }
             else
             {
-                partitionWidth = partitionWidth / 2;
+                partitionWidth = partitionWidth / numRooms;
             }
         }
         print("partitonWidth = " + partitionWidth + " and partitionHeight = " + partitionHeight);
@@ -47,7 +54,7 @@ public class TreeRectDebug : MonoBehaviour
                 firstPartitions[i] = sampleRectTree.Root().AddChild(rightPartition);
             }
         }
-
+        
         for (int i = 0; i < firstPartitions.Length; i++)
         {
             for (int z = 0; z < firstPartitions.Length; z++)
@@ -84,13 +91,14 @@ public class TreeRectDebug : MonoBehaviour
         BinaryTreeNode<RectInt> rectTreeRoot = sampleRectTree.Root();
         List<BinaryTreeNode<RectInt>> rectLeaves = new List<BinaryTreeNode<RectInt>>();
 
-        CollectRectLeaves(rectTreeRoot, rectLeaves);
-
         foreach (BinaryTreeNode<RectInt> leaf in rectLeaves)
         {
             RectInt rectWorld = NodeRectWorld(leaf);
-            print("Leaf rectagular world: " + rectWorld);
+            print("Leaf rectagular world " + count + ": " + rectWorld);
+            count++;
         }
+
+        CollectRectLeaves(rectTreeRoot, rectLeaves);
     }
 
     private void CollectRectLeaves(BinaryTreeNode<RectInt> currentNode, List<BinaryTreeNode<RectInt>> rectLeaves)
@@ -115,16 +123,46 @@ public class TreeRectDebug : MonoBehaviour
     {
         BinaryTreeNode<RectInt> current = node;
         RectInt rectWorld = node.Value();
-        rectWorld.x = 0;
-        rectWorld.y = 0;
         while (current != null)
         {
-            rectWorld.x += current.Value().x;
-            rectWorld.y += current.Value().y;
-
             current = current.parent;
         }
         return rectWorld;
+    }
+
+    private List<BinaryTreeNode<RectInt>> DividingNodes(List<BinaryTreeNode<RectInt>> nodes, int depth, bool splitVertical)
+    {
+        List<BinaryTreeNode<RectInt>> allNodes = new List<BinaryTreeNode<RectInt>>();
+        List<BinaryTreeNode<RectInt>> next = new List<BinaryTreeNode<RectInt>>();
+        RectInt leftRect;
+        RectInt rightRect;
+
+        if (splitVertical)
+        {
+            splitWidth = splitWidth / 2;
+            leftRect = new RectInt(0, 0, splitWidth, splitHeight);
+            rightRect = new RectInt(splitWidth, 0, splitWidth, splitHeight);
+        }
+        else
+        {
+            splitHeight = splitHeight / 2;
+            leftRect = new RectInt(0, splitHeight, splitWidth, splitHeight);
+            rightRect = new RectInt(0, 0, splitWidth, splitHeight);
+        }
+
+        if (depth == 0)
+        {
+            return allNodes;
+        }
+        foreach (BinaryTreeNode<RectInt> node in nodes)
+        {
+            BinaryTreeNode<RectInt> leftChild = node.AddChild(leftRect);
+            BinaryTreeNode<RectInt> rightChild = node.AddChild(rightRect);
+            next.Add(leftChild);
+            next.Add(rightChild);
+            allNodes.AddRange(DividingNodes(next, depth - 1, !splitVertical));
+        }
+        return allNodes;
     }
 	
 	// Update is called once per frame
