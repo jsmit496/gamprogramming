@@ -11,14 +11,14 @@ public class TreeDebug : MonoBehaviour
     {
         BinaryTree<int> sampleTree = new BinaryTree<int>(42);
 
-        BinaryTreeNode<int> left = sampleTree.Root().AddChild(5);
-        BinaryTreeNode<int> right = sampleTree.Root().AddChild(17);
+        //BinaryTreeNode<int> left = sampleTree.Root().AddChild(5);
+        //BinaryTreeNode<int> right = sampleTree.Root().AddChild(17);
 
-        BinaryTreeNode<int> leftOfLeft = left.AddChild(-6);
-        BinaryTreeNode<int> rightOfLeft = left.AddChild(12);
+        //BinaryTreeNode<int> leftOfLeft = left.AddChild(-6);
+        //BinaryTreeNode<int> rightOfLeft = left.AddChild(12);
 
-        BinaryTreeNode<int> leftOfRight = right.AddChild(128);
-        BinaryTreeNode<int> rightOfRight = right.AddChild(1024);
+        //BinaryTreeNode<int> leftOfRight = right.AddChild(128);
+        //BinaryTreeNode<int> rightOfRight = right.AddChild(1024);
 
         // Now What?
         BinaryTreeNode<int> treeRoot = sampleTree.Root();
