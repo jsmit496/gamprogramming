@@ -9,14 +9,18 @@ public class PlayerInteraction : MonoBehaviour
     public float moveSpeed = 4.0f;
     public LayerMask targetNPC;
     public float rayDistance = 3.0f;
+    public float motionScale = 90f;
+    public float maxAngle = 90f;
 
     private Vector3 rayCollisionNormal;
     private Vector3 hitLocationThisFram = Vector3.zero;
     private bool hitTarget = false;
     private int currTextBox = 0;
 
-	// Use this for initialization
-	void Start ()
+    public GameObject playerCamera;
+
+    // Use this for initialization
+    void Start ()
     {
         for (int i = 0; i < npcTextBoxes.Length; i++)
         {
@@ -46,6 +50,40 @@ public class PlayerInteraction : MonoBehaviour
             moveDirection += transform.right;
         }
         transform.position += moveDirection * Time.deltaTime * moveSpeed;
+
+        //Handles Player rotation
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
+
+        if (mouseX > 0)
+        {
+            transform.Rotate(Vector3.up, mouseX * motionScale * Time.deltaTime, Space.World);
+        }
+        if (mouseX < 0)
+        {
+            transform.Rotate(Vector3.down, -mouseX * motionScale * Time.deltaTime, Space.World);
+        }
+
+        if (mouseY > 0)
+        {
+            playerCamera.transform.Rotate(-transform.right, motionScale * Time.deltaTime, Space.World);
+
+            if (Vector3.Angle(transform.forward, playerCamera.transform.forward) > maxAngle)
+            {
+                playerCamera.transform.forward = transform.forward;
+                playerCamera.transform.Rotate(-transform.right, maxAngle, Space.World);
+            }
+        }
+        if (mouseY < 0)
+        {
+            playerCamera.transform.Rotate(transform.right, motionScale * Time.deltaTime, Space.World);
+
+            if (Vector3.Angle(transform.forward, playerCamera.transform.forward) > maxAngle)
+            {
+                playerCamera.transform.forward = transform.forward;
+                playerCamera.transform.Rotate(transform.right, maxAngle, Space.World);
+            }
+        }
 
         //Check Raycast if it hit target
         RaycastHit hitinfo;

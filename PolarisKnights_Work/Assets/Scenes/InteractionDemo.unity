@@ -194,6 +194,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114704349293760414, guid: 266838d36b7a83e47b7135b9e2240f8e,
+        type: 2}
+      propertyPath: mana
+      value: 
+      objectReference: {fileID: 1078832570}
     - target: {fileID: 114433253157873552, guid: 266838d36b7a83e47b7135b9e2240f8e,
         type: 2}
       propertyPath: npcTextBoxes.Array.data[0]
@@ -209,6 +214,15 @@ Prefab:
       propertyPath: npcTextBoxes.Array.data[2]
       value: 
       objectReference: {fileID: 1854845012}
+    - target: {fileID: 4035480929835776, guid: 266838d36b7a83e47b7135b9e2240f8e, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 1.093
+      objectReference: {fileID: 0}
+    - target: {fileID: 114704349293760414, guid: 266838d36b7a83e47b7135b9e2240f8e,
+        type: 2}
+      propertyPath: manaCost
+      value: 50
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 266838d36b7a83e47b7135b9e2240f8e, type: 2}
   m_IsPrefabParent: 0
@@ -260,12 +274,6 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1791887433}
   m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
---- !u!114 &932197481 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114435034026770156, guid: 338fbbbdbc0bfff40b5a3ee63918fa97,
-    type: 2}
-  m_PrefabInternal: {fileID: 1791887433}
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1001 &983863071
 Prefab:
   m_ObjectHideFlags: 0
@@ -320,28 +328,6 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1791887433}
   m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
---- !u!1 &1580186905 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1355378514494768, guid: 266838d36b7a83e47b7135b9e2240f8e,
-    type: 2}
-  m_PrefabInternal: {fileID: 114175636}
---- !u!114 &1580186911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1580186905}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 978b34f53beb1ca4eb267a8e492068eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mana: {fileID: 1078832570}
-  manaBorder: {fileID: 932197481}
-  maxMana: 100
-  manaRegen: 10
-  manaDecrease: 10
-  tempMana: 0
 --- !u!1001 &1593606872
 Prefab:
   m_ObjectHideFlags: 0
@@ -380,6 +366,10 @@ Prefab:
     - target: {fileID: 4078895171759550, guid: 9feb006d64a8ed74f930ec2e8d099412, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243869289646640, guid: 9feb006d64a8ed74f930ec2e8d099412, type: 2}
+      propertyPath: m_Name
+      value: NPC
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9feb006d64a8ed74f930ec2e8d099412, type: 2}
@@ -480,6 +470,16 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224816757368534084, guid: 338fbbbdbc0bfff40b5a3ee63918fa97,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.2000122
+      objectReference: {fileID: 0}
+    - target: {fileID: 224992359974116364, guid: 338fbbbdbc0bfff40b5a3ee63918fa97,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -1.2000122
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 338fbbbdbc0bfff40b5a3ee63918fa97, type: 2}
