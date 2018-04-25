@@ -16,7 +16,6 @@ public class Shooting : MonoBehaviour
     private float tempMana;
     private float currMana;
     private float manaMaxSizeX;
-    private bool decreaseMana = false;
     private bool shotFireball = false;
 
     public GameObject fireBall;
@@ -27,7 +26,8 @@ public class Shooting : MonoBehaviour
         currMana = maxMana;
         tempMana = currMana;
         manaMaxSizeX = mana.rectTransform.localScale.x;
-	}
+        mana.fillAmount = 0;
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -41,7 +41,6 @@ public class Shooting : MonoBehaviour
             dummyFireball = Instantiate(fireBall, transform.position, transform.rotation);
             dummyFireball.GetComponent<Rigidbody>().AddForce(dummyFireball.transform.forward * fireSpeed);
             tempMana = currMana - manaCost;
-            decreaseMana = true;
             shotFireball = true;
             useWaitTime = 0;
         }
@@ -69,8 +68,9 @@ public class Shooting : MonoBehaviour
             currMana -= 1;
         }
 
-        manaTrans.x = manaMaxSizeX * (currMana / maxMana);
-        mana.rectTransform.localScale = manaTrans;
+        //manaTrans.x = manaMaxSizeX * (currMana / maxMana);
+        mana.fillAmount = currMana / maxMana;
+        //mana.rectTransform.localScale = manaTrans;
 
         if (shotFireball == true)
         {

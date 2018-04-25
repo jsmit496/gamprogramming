@@ -38,51 +38,8 @@ public class checkRaycastCollision : MonoBehaviour
             hitTarget = false;
         }
 
-        if (_myTarget.tag == "Wall")
+        if (hitTarget == true && _myTarget.tag == "Wall")
         {
-            //get the differences for when to change materials
-            if (setUpStuff == false)
-            {
-                numMats = _myTarget.percentHealthMat.Length;
-                differences = new float[numMats];
-                setUpStuff = true;
-            }
-            float difference = _myTarget.maxHealth / numMats;
-            for (int i = 0; i < numMats; i++)
-            {
-                differences[i] = _myTarget.maxHealth - difference * i;
-            }
-
-            //Test for reducing health and seeing the walls change
-            if (Input.GetKey(KeyCode.F))
-            {
-                _myTarget.currHealth -= 1;
-                if (_myTarget.currHealth <= 0)
-                {
-                    _myTarget.currHealth = 0;
-                }
-            }
-
-            //changes the material
-            if (_myTarget.currHealth != 0)
-            {
-                for (int i = 0; i < numMats; i++)
-                {
-                    if (_myTarget.currHealth <= differences[i])
-                    {
-                        _myTarget.gameObject.GetComponent<Renderer>().material = _myTarget.percentHealthMat[i];
-                    }
-                }
-                if (_myTarget.currHealth > 0)
-                {
-                    _myTarget.gameObject.GetComponent<MeshRenderer>().enabled = true;
-                }
-            }
-            else
-            {
-                _myTarget.gameObject.GetComponent<MeshRenderer>().enabled = false;
-            }
-
             //Test for repairing a wall
             if (Input.GetKey(KeyCode.R))
             {
@@ -96,6 +53,7 @@ public class checkRaycastCollision : MonoBehaviour
                     _myTarget.currHealth = _myTarget.maxHealth;
                     _myTarget.currRepairTime = 0;
                     _myTarget.repairImage.enabled = false;
+                    _myTarget.gameObject.GetComponent<Renderer>().material = _myTarget.percentHealthMat[0];
                 }
             }
             else
@@ -107,7 +65,6 @@ public class checkRaycastCollision : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + transform.forward * rayDistance);
 
         //Check if target it by changing color
@@ -115,6 +72,10 @@ public class checkRaycastCollision : MonoBehaviour
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(hitLocationThisFram, hitLocationThisFram + rayCollisionNormal);
+        }
+        else
+        {
+            Gizmos.color = Color.green;
         }
     }
 }

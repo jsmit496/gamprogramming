@@ -9,9 +9,12 @@ public class BulletCollisionCheck : MonoBehaviour
 {
     public string obstacleTag = "Obstacle"; //tag for obstacles in world
     public string enemyTag = "Enemy"; //tag for enemies in world
+    public float damage = 10;
     public float timeInAir = 10;
     public float appliedForceMultiplier = 1;
     public bool airGunBullet = false;
+
+    private bool damageWall = false;
 
 	// Use this for initialization
 	void Start ()
@@ -25,6 +28,12 @@ public class BulletCollisionCheck : MonoBehaviour
         if (timeInAir <= 0)
         {
             Destroy(this.gameObject);
+        }
+
+        //Handles when a bullet hit the wall for changing the materials
+        if (damageWall == true)
+        {
+            
         }
 	}
 
@@ -41,6 +50,14 @@ public class BulletCollisionCheck : MonoBehaviour
                 collision.rigidbody.AddForce(transform.forward * appliedForceMultiplier);
                 Destroy(this.gameObject);
             }
+        }
+        if (collision.collider.tag == "Wall")
+        {
+            if (airGunBullet == false)
+            {
+                collision.gameObject.GetComponent<DestructableWall>().currHealth -= damage;
+            }
+            Destroy(this.gameObject);
         }
     }
 }

@@ -114,7 +114,7 @@ MonoBehaviour:
   obstacleTag: Obstacle
   enemyTag: Enemy
   timeInAir: 20
-  appliedForceMultiplier: 10000
+  appliedForceMultiplier: 5000
   airGunBullet: 1
 --- !u!135 &135631682582492768
 SphereCollider:
