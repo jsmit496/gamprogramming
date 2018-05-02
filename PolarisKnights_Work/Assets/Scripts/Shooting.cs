@@ -10,13 +10,14 @@ public class Shooting : MonoBehaviour
     public Image mana; //Image for mana you want to change as mana changes
     public float maxMana = 100; //Maximum amount of mana the player has
     public float manaRegen = 10; //How fast mana can regen
-    public float manaCost = 5; //The cost to use the ability
+    public float manaCost = 5; //The cost to use the ability'
 
     private float useWaitTime = 0.0f;
     private float tempMana;
     private float currMana;
     private float manaMaxSizeX;
     private bool shotFireball = false;
+
 
     public GameObject fireBall;
 

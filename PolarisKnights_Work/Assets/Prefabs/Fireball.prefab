@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 135453830347409050}
   - component: {fileID: 23904887333900866}
   - component: {fileID: 54963810311390544}
+  - component: {fileID: 114047952258016740}
   m_Layer: 9
   m_Name: Fireball
   m_TagString: Untagged
@@ -161,6 +162,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &114047952258016740
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1274138056964576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb915f033af26cf49bdd473d1b76907d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetsCanHitTag:
+  - NPC
+  canExplode: 1
+  explosionForce: 10
+  explosionRadius: 2
+  explosionUpwardForce: 1
+  explosionObject: {fileID: 1274138056964576}
 --- !u!135 &135453830347409050
 SphereCollider:
   m_ObjectHideFlags: 1
