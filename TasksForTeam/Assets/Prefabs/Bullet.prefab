@@ -115,6 +115,7 @@ MonoBehaviour:
   enemyTag: Enemy
   timeInAir: 20
   appliedForceMultiplier: 1
+  damage: 5
   airGunBullet: 0
 --- !u!135 &135985902966876060
 SphereCollider:

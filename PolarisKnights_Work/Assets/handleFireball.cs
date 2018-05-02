@@ -9,8 +9,10 @@ public class handleFireball : MonoBehaviour
     public float explosionForce = 0f;
     public float explosionRadius = 0f;
     public float explosionUpwardForce = 0f;
+    public float damage;
 
     public GameObject explosionObject;
+    public ParticleSystem explosionParticle;
 
     // Use this for initialization
     void Start ()
@@ -31,9 +33,14 @@ public class handleFireball : MonoBehaviour
         foreach (Collider hit in explosionColliders)
         {
             Rigidbody objectHit = hit.GetComponent<Rigidbody>();
+            TestHealth objectHealth = hit.GetComponent<TestHealth>();
             if (objectHit != null)
             {
                 objectHit.AddExplosionForce(explosionForce, explosionPosition, explosionRadius, explosionUpwardForce, ForceMode.Impulse);
+            }
+            if (objectHealth != null)
+            {
+                objectHealth.currHealth -= damage;
             }
         }
         Destroy(this.gameObject);

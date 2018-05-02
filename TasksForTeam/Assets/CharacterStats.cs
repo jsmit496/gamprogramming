@@ -6,8 +6,8 @@ public class CharacterStats : MonoBehaviour
 {
     public float maxHealth = 100; //Health of the character this is attached to
     public float strength = 0; //The amount of damage this character will deal (keep at zero if its the player).
-
-    private float currHealth;
+    public float currHealth; //Current health of character
+    public bool isDead = false;
 
 	// Use this for initialization
 	void Start ()
@@ -18,6 +18,10 @@ public class CharacterStats : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-		
+		if (currHealth <= 0)
+        {
+            currHealth = 0;
+            isDead = true;
+        }
 	}
 }

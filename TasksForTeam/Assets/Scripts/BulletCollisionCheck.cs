@@ -11,6 +11,7 @@ public class BulletCollisionCheck : MonoBehaviour
     public string enemyTag = "Enemy"; //tag for enemies in world
     public float timeInAir = 10;
     public float appliedForceMultiplier = 1;
+    public float damage;
     public bool airGunBullet = false;
 
 	// Use this for initialization
@@ -39,8 +40,9 @@ public class BulletCollisionCheck : MonoBehaviour
             if (airGunBullet == true)
             {
                 collision.rigidbody.AddForce(transform.forward * appliedForceMultiplier);
-                Destroy(this.gameObject);
             }
+            collision.collider.GetComponent<CharacterStats>().currHealth -= damage;
+            Destroy(this.gameObject);
         }
     }
 }

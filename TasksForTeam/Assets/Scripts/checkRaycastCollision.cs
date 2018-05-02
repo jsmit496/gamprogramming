@@ -7,6 +7,8 @@ public class checkRaycastCollision : MonoBehaviour
     public LayerMask destructableWallLayer;
     public LayerMask Pickup;
     public float rayDistance = 3.0f;
+    public GameObject playerShootObject;
+    public GameObject characterStatObject;
 
     private Vector3 rayCollisionNormal;
     private Vector3 hitLocationThisFram = Vector3.zero;
@@ -35,7 +37,11 @@ public class checkRaycastCollision : MonoBehaviour
             _myTargetWall = hitinfo.collider.gameObject.GetComponent<DestructableWall>();
             hitTarget = true;
         }
-        else if (Physics.Raycast(transform.position, transform.forward, out hitinfo, rayDistance, Pickup.value))
+        else
+        {
+            hitTarget = false;
+        }
+        if (Physics.Raycast(transform.position, transform.forward, out hitinfo, rayDistance, Pickup.value))
         {
             hitLocationThisFram = hitinfo.point;
             rayCollisionNormal = hitinfo.normal;
@@ -47,7 +53,7 @@ public class checkRaycastCollision : MonoBehaviour
             hitTarget = false;
         }
 
-        if (_myTargetWall.tag == "Wall")
+        if (_myTargetWall != null && _myTargetWall.tag == "Wall")
         {
             //get the differences for when to change materials
             if (setUpStuff == false)
@@ -113,18 +119,33 @@ public class checkRaycastCollision : MonoBehaviour
             }
         }
 
-        if (_myTargetPickup.tag == "Pickup")
+        if (_myTargetPickup != null && _myTargetPickup.tag == "Pickup")
         {
             if (Input.GetKey(KeyCode.E))
             {
                 if (_myTargetPickup.healthPickup)
                 {
+                    float currentHealth = characterStatObject.GetComponent<CharacterStats>().currHealth;
+                    float maxHealth = characterStatObject.GetComponent<CharacterStats>().maxHealth;
                     //Increase Player Health
+                    if (currentHealth < maxHealth)
+                    {
+                        if (maxHealth - currentHealth < _myTargetPickup.healthIncreaseAmount)
+                        {
+                            characterStatObject.GetComponent<CharacterStats>().currHealth += (maxHealth - currentHealth);
+                        }
+                        else
+                        {
+                            characterStatObject.GetComponent<CharacterStats>().currHealth += _myTargetPickup.healthIncreaseAmount;
+                        }
+                    }  
                 }
                 if (_myTargetPickup.ammoPickup)
                 {
                     //Increase Player Ammo
+                    playerShootObject.GetComponent<PlayerShoot>().maxExtraAmmoCount += _myTargetPickup.ammoIncreaseAmount;
                 }
+                Destroy(_myTargetPickup.gameObject);
             }
         }
     }

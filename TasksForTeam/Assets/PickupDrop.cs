@@ -11,7 +11,7 @@ public class PickupDrop : MonoBehaviour
 
     //Amount given for that pickup depending on bool
     public float healthIncreaseAmount;
-    public float ammoIncreaseAmount;
+    public int ammoIncreaseAmount;
 
     private bool randomDropChosen = false;
 
