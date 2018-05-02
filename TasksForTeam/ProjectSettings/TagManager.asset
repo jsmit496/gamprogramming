@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Wall
   - WayPoint
+  - Pickup
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - 
   - noBulletCollide
   - Destructable Wall
-  - 
+  - Pickup
   - 
   - 
   - 
