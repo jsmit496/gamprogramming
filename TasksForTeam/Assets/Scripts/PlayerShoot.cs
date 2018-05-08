@@ -33,8 +33,6 @@ public class PlayerShoot : MonoBehaviour
 
     public GameObject bullet; //The bullet used to fire out of the gun
     private GameObject[] bullets;
-    public GameObject dynamite;
-    public GameObject flare;
 
 	// Use this for initialization
 	void Start ()

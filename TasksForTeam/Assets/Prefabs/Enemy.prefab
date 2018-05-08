@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 23471975619283670}
   - component: {fileID: 54707327983526456}
   - component: {fileID: 114035716310124804}
-  - component: {fileID: 114443145980201164}
+  - component: {fileID: 114209715584385682}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -56,14 +56,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1142942114395294}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6, y: 1, z: 5.42}
+  m_LocalRotation: {x: -0, y: -0.8660254, z: -0, w: 0.5000001}
+  m_LocalPosition: {x: 2.2563386, y: 1, z: 5.769869}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4780061436034760}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -120.00001, z: 0}
 --- !u!4 &4780061436034760
 Transform:
   m_ObjectHideFlags: 1
@@ -172,7 +172,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 32
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &65294951348857832
 BoxCollider:
@@ -197,7 +197,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b0cec2f16bda0548a4352d41623ed89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114443145980201164
+  speed: 4
+  damage: 10
+  pathTargetToGo: 0
+  pathNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  destructableWallLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  rayDistance: 3
+--- !u!114 &114209715584385682
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -205,13 +215,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1142942114395294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 544f357cf69bfe840b7206529552cfe0, type: 3}
+  m_Script: {fileID: 11500000, guid: 383fdc6662b0b1d41943d3939bfc6f81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructableWallLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  rayDistance: 3
+  maxHealth: 100
+  strength: 0
+  currHealth: 0
+  isDead: 0
+  health: {fileID: 0}
+  hasHealthbar: 0
 --- !u!136 &136403745833728366
 CapsuleCollider:
   m_ObjectHideFlags: 1
