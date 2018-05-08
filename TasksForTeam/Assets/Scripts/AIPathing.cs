@@ -7,11 +7,18 @@ public class AIPathing : MonoBehaviour
     public float speed = 4.0f;
     public float damage = 10;
     public int pathTargetToGo = 0;
-    public GameObject[] pathNodes;
+    public GameObject goToTarget;
     public LayerMask destructableWallLayer;
+    public LayerMask playerLayer;
+    public LayerMask baseCoreLayer;
     public float rayDistance = 3.0f;
+    public float viewRadius = 10;
+    public float waitBetweenAttacks = 2;
+    public bool isNight = false;
 
-    private DestructableWall _myTarget;
+    private DestructableWall _myTargetWall;
+    private CharacterStats _myTargetStats;
+    private CoreStats _myTargetCoreStats;
     private float[] differences;
     private int numMats;
     private Vector3 rayCollisionNormal;
@@ -19,49 +26,61 @@ public class AIPathing : MonoBehaviour
     private bool hitTarget = false;
     private bool setUpStuff = false;
     private bool targetDestroyed = false;
+    private float timeWaitedBetweenAttacks;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    }
+
+    // Update is called once per frame
+    void Update()
     {
+        GameObject flareObj = GameObject.FindGameObjectWithTag("Flare");
+
         //Check Raycast if it hit target
         RaycastHit hitinfo;
         if (Physics.Raycast(transform.position, transform.forward, out hitinfo, rayDistance, destructableWallLayer.value))
         {
             hitLocationThisFram = hitinfo.point;
             rayCollisionNormal = hitinfo.normal;
-            _myTarget = hitinfo.collider.gameObject.GetComponent<DestructableWall>();
-            hitTarget = true;
+            _myTargetWall = hitinfo.collider.gameObject.GetComponent<DestructableWall>();
+        }
+        else if (Physics.Raycast(transform.position, transform.forward, out hitinfo, rayDistance, playerLayer.value))
+        {
+            hitLocationThisFram = hitinfo.point;
+            rayCollisionNormal = hitinfo.normal;
+            _myTargetStats = hitinfo.collider.gameObject.GetComponent<CharacterStats>();
+        }
+        else if (Physics.Raycast(transform.position, transform.forward, out hitinfo, rayDistance, baseCoreLayer.value))
+        {
+            hitLocationThisFram = hitinfo.point;
+            rayCollisionNormal = hitinfo.normal;
+            _myTargetCoreStats = hitinfo.collider.gameObject.GetComponent<CoreStats>();
         }
         else
         {
-            hitTarget = false;
+            _myTargetWall = null;
+            _myTargetStats = null;
+            _myTargetCoreStats = null;
         }
 
-        if (hitTarget == true && _myTarget.gameObject.GetComponent<DestructableWall>().currHealth > 0)
+        if (_myTargetWall != null && _myTargetWall.gameObject.GetComponent<DestructableWall>().currHealth > 0)
         {
-            _myTarget.gameObject.GetComponent<DestructableWall>().currHealth -= damage;
+            _myTargetWall.currHealth -= damage;
         }
-        else
+        if (flareObj != null)
         {
-            transform.position = Vector3.MoveTowards(transform.position, pathNodes[pathTargetToGo].transform.position, speed * Time.deltaTime);
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "WayPoint")
-        {
-            pathTargetToGo++;
-            if (pathTargetToGo > pathNodes.Length - 1)
+            if (flareObj.transform.position.magnitude - gameObject.transform.position.magnitude < viewRadius)
             {
-                pathTargetToGo = 0;
+                goToTarget = flareObj;
             }
+        }
+        //else if ()
+        else
+        {
+
         }
     }
 
@@ -79,5 +98,8 @@ public class AIPathing : MonoBehaviour
         {
             Gizmos.color = Color.green;
         }
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, viewRadius);
     }
 }
