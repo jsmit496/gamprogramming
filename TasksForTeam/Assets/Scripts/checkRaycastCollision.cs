@@ -6,9 +6,12 @@ public class checkRaycastCollision : MonoBehaviour
 {
     public LayerMask destructableWallLayer;
     public LayerMask Pickup;
+    public LayerMask ChangeScenesObj;
     public float rayDistance = 3.0f;
     public GameObject playerShootObject;
     public GameObject characterStatObject;
+    public GameObject _changeSceneseObj;
+
 
     private Vector3 rayCollisionNormal;
     private Vector3 hitLocationThisFram = Vector3.zero;
@@ -22,7 +25,7 @@ public class checkRaycastCollision : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        
+        _changeSceneseObj.SetActive(false);
     }
 	
 	// Update is called once per frame
@@ -51,6 +54,25 @@ public class checkRaycastCollision : MonoBehaviour
         else
         {
             hitTarget = false;
+        }
+        if (Physics.Raycast(transform.position, transform.forward, out hitinfo, rayDistance, ChangeScenesObj.value))
+        {
+            hitLocationThisFram = hitinfo.point;
+            rayCollisionNormal = hitinfo.normal;
+            if (Input.GetKey(KeyCode.E))
+            {
+                _changeSceneseObj.SetActive(true);
+            }
+            hitTarget = true;
+        }
+        else
+        {
+            hitTarget = false;
+        }
+
+        if (_changeSceneseObj.activeSelf && Input.GetKey(KeyCode.Escape))
+        {
+            _changeSceneseObj.SetActive(false);
         }
 
         if (_myTargetWall != null && _myTargetWall.tag == "Wall")

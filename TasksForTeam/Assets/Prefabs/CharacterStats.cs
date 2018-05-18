@@ -10,6 +10,7 @@ public class CharacterStats : MonoBehaviour
     public float currHealth; //Current health of character
     public bool isDead = false;
     public Image health;
+    public bool isAi = false;
 
     public bool hasHealthbar = false;
 
@@ -35,6 +36,11 @@ public class CharacterStats : MonoBehaviour
         if (hasHealthbar)
         {
             health.fillAmount = currHealth / maxHealth;
+        }
+
+        if (isAi && isDead)
+        {
+            Destroy(gameObject);
         }
 	}
 }
